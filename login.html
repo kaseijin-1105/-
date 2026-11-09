@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>超常現象研究所</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    background:black;
+    text-align:center;
+    color:white;
+    font-family:Meiryo;
+    margin:0;
+    padding:20px 16px;
+}
+
+img{
+    display:block;
+    width:100%;
+    max-width:600px;
+    height:auto;
+    margin:clamp(16px, 6vh, 40px) auto 24px;
+}
+
+input{
+    display:block;
+    padding:12px;
+    width:100%;
+    max-width:360px;
+    min-height:48px;
+    margin:0 auto 12px;
+    font-size:16px;
+}
+
+button{
+    padding:12px 20px;
+    min-height:48px;
+    font-size:16px;
+}
+</style>
+
+</head>
+<body>
+
+<img src="{{ url_for('static', filename='logo.png') }}">
+
+<h2>職員認証</h2>
+
+<form method="post">
+
+<input
+type="password"
+name="password"
+placeholder="パスワードを入力">
+
+<button type="submit" onclick="playSound()">
+認証
+</button>
+
+</form>
+
+<p style="color:red;">
+{{ error }}
+</p>
+<audio id="startSound">
+    <source src="{{ url_for('static', filename='start.mp3') }}">
+</audio>
+
+<script>
+function playSound(){
+    document.getElementById("startSound").play();
+}
+</script>
+</body>
+</html>

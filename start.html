@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>認証成功</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    background:black;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    min-height:100dvh;
+    font-family:Meiryo;
+    text-align:center;
+    margin:0;
+    padding:24px 16px;
+}
+
+#message{
+    font-size:clamp(32px, 10vw, 50px);
+    transition: opacity 2s;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="message">
+認証成功
+</div>
+
+<audio id="authSound">
+<source src="{{ url_for('static', filename='start.mp3') }}">
+</audio>
+
+<audio id="aiVoice">
+<source src="{{ url_for('static', filename='ai_start.mp3') }}">
+</audio>
+
+<script>
+
+window.onload = async function(){
+
+    // 振動
+    if(navigator.vibrate){
+        navigator.vibrate([200,100,200]);
+    }
+
+    // ピッ
+    await document.getElementById("authSound").play();
+
+    // 認証成功表示
+    setTimeout(()=>{
+        document.getElementById("message").style.opacity="1";
+    },300);
+
+    // AI音声
+    setTimeout(()=>{
+        document.getElementById("aiVoice").play();
+    },1500);
+
+    // 問題1へ
+    setTimeout(()=>{
+        window.location.href="/question/0";
+    },9000);
+
+}
+
+</script>
+
+</body>
+</html>

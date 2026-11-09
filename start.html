@@ -1,13 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>認証成功</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -19,16 +20,13 @@ body{
     justify-content:center;
     align-items:center;
     min-height:100vh;
-    min-height:100dvh;
-    font-family:Meiryo;
+    font-family:Meiryo,sans-serif;
     text-align:center;
     margin:0;
-    padding:24px 16px;
 }
 
 #message{
-    font-size:clamp(32px, 10vw, 50px);
-    transition: opacity 2s;
+    font-size:clamp(32px,10vw,50px);
 }
 
 </style>
@@ -42,11 +40,11 @@ body{
 </div>
 
 <audio id="authSound">
-<source src="{{ url_for('static', filename='start.mp3') }}">
+    <source src="start.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="aiVoice">
-<source src="{{ url_for('static', filename='ai_start.mp3') }}">
+    <source src="ai_start.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -55,29 +53,39 @@ if(localStorage.getItem("authenticated") !== "true"){
     location.href = "index.html";
 }
 
-window.onload = async function(){
+window.onload = function(){
 
     if(navigator.vibrate){
         navigator.vibrate([200,100,200]);
     }
 
-    try{
-        await document.getElementById("authSound").play();
-    }catch(e){}
+    const authSound =
+        document.getElementById("authSound");
 
-    setTimeout(()=>{
-        document.getElementById("message").style.opacity="1";
-    },300);
+    authSound.play().catch(()=>{});
 
-    setTimeout(()=>{
-        document.getElementById("aiVoice").play().catch(()=>{});
-    },1500);
+    setTimeout(function(){
 
-    setTimeout(()=>{
-        location.href = "question.html";
+        document
+        .getElementById("aiVoice")
+        .play()
+        .catch(()=>{});
+
+    },1000);
+
+    setTimeout(function(){
+
+        location.href =
+        "question.html";
+
     },9000);
 
-}
+};
+
+</script>
+
+</body>
+</html>
 
 </script>
 

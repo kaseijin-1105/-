@@ -101,6 +101,8 @@ placeholder="解答">
 
 <script>
 
+<script>
+
 const questions = [
 
 {
@@ -135,8 +137,21 @@ answer:"4000"
 
 ];
 
+// 認証チェック
+if(localStorage.getItem("authenticated") !== "true"){
+
+    location.href = "index.html";
+
+}
+
+// 現在の問題
 let currentQuestion =
 Number(localStorage.getItem("currentQuestion") || 0);
+
+// 解放済み問題
+let unlockedQuestion =
+Number(localStorage.getItem("unlockedQuestion") || 0);
+
 
 function displayQuestion(){
 
@@ -149,27 +164,42 @@ questions[currentQuestion].title;
 document.getElementById("question").textContent =
 questions[currentQuestion].question;
 
-document.getElementById("answer").value="";
+document.getElementById("answer").value = "";
 
-document.getElementById("result").textContent="";
+document.getElementById("result").innerHTML = "";
+
+// 前へボタン
 
 document.getElementById("prevBtn").style.display =
-currentQuestion === 0 ? "none" : "inline-block";
+currentQuestion === 0
+? "none"
+: "inline-block";
+
+// 次へボタン
 
 document.getElementById("nextBtn").style.display =
-currentQuestion === questions.length-1 ?
-"none" : "inline-block";
+currentQuestion < unlockedQuestion
+? "inline-block"
+: "none";
+
+localStorage.setItem(
+"currentQuestion",
+currentQuestion
+);
 
 }
+
 
 function judgeAnswer(){
 
 const userAnswer =
 document.getElementById("answer")
-.value.trim();
+.value
+.trim();
 
 const correctAnswer =
-questions[currentQuestion].answer;
+questions[currentQuestion]
+.answer;
 
 const result =
 document.getElementById("result");
@@ -181,15 +211,50 @@ correctAnswer.toUpperCase()
 ){
 
 result.className="correct";
-result.textContent="✅ 正解";
 
-if(currentQuestion === questions.length-1){
+result.innerHTML="✅ 正解";
+
+// 解放処理
+
+if(currentQuestion === unlockedQuestion
+&& currentQuestion < questions.length - 1){
+
+unlockedQuestion++;
+
+localStorage.setItem(
+"unlockedQuestion",
+unlockedQuestion
+);
+
+document.getElementById("nextBtn")
+.style.display =
+"inline-block";
+
+}
+
+// 最終問題
+
+if(
+currentQuestion
+===
+questions.length - 1
+){
 
 result.innerHTML =
-"✅ 正解<br><br>以上で問題は終了です。お疲れ様でした。";
+`
+✅ 正解
+<br><br>
+以上で問題は終了です。
+<br>
+お疲れ様でした。
+`;
 
 if(navigator.vibrate){
-navigator.vibrate(2000);
+
+navigator.vibrate(
+[300,100,300,100,300]
+);
+
 }
 
 }
@@ -197,28 +262,44 @@ navigator.vibrate(2000);
 }else{
 
 result.className="wrong";
-result.textContent="❌ 不正解";
+
+result.innerHTML="❌ 不正解";
 
 }
 
 }
+
 
 function nextQuestion(){
 
-if(currentQuestion < questions.length-1){
+if(
+currentQuestion + 1
+>
+unlockedQuestion
+){
+
+alert(
+"先に現在の問題を解いてください"
+);
+
+return;
+
+}
+
+if(
+currentQuestion
+<
+questions.length - 1
+){
 
 currentQuestion++;
-
-localStorage.setItem(
-"currentQuestion",
-currentQuestion
-);
 
 displayQuestion();
 
 }
 
 }
+
 
 function prevQuestion(){
 
@@ -226,26 +307,20 @@ if(currentQuestion > 0){
 
 currentQuestion--;
 
-localStorage.setItem(
-"currentQuestion",
-currentQuestion
-);
-
 displayQuestion();
 
 }
 
 }
 
-window.onload = function(){
 
-document.getElementById("startSound")
-.play()
-.catch(()=>{});
+window.onload = function(){
 
 displayQuestion();
 
 };
+
+</script>
 
 </script>
 

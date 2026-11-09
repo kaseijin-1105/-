@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>{{ question.title }}</title>
+<title>問題</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -15,7 +16,7 @@ body{
     background:#111;
     color:white;
     text-align:center;
-    font-family:Meiryo;
+    font-family:Meiryo,sans-serif;
     margin:0;
 }
 
@@ -23,13 +24,13 @@ body{
     width:100%;
     max-width:760px;
     margin:auto;
-    padding:clamp(20px, 5vw, 36px) 16px;
+    padding:clamp(20px,5vw,36px) 16px;
 }
 
 .question{
     white-space:pre-line;
-    font-size:clamp(20px, 5vw, 24px);
-    margin:clamp(20px, 6vw, 36px) 0;
+    font-size:clamp(20px,5vw,24px);
+    margin:clamp(20px,6vw,36px) 0;
     overflow-wrap:anywhere;
 }
 
@@ -46,80 +47,207 @@ button{
     margin:5px;
     min-height:48px;
     font-size:16px;
-    max-width:100%;
 }
 
 .correct{
     color:#00ff88;
-    font-size:clamp(20px, 5vw, 24px);
-    overflow-wrap:anywhere;
+    font-size:clamp(20px,5vw,24px);
+}
+
+.wrong{
+    color:red;
+    font-size:clamp(20px,5vw,24px);
 }
 
 </style>
 </head>
 
 <body>
-<audio id="startSound" autoplay>
-    <source src="{{ url_for('static', filename='start.mp3') }}">
+
+<audio id="startSound">
+    <source src="start.mp3" type="audio/mpeg">
 </audio>
+
 <div class="container">
 
-<h1>{{ question.title }}</h1>
+<h1 id="title"></h1>
 
-<div class="question">
-{{ question.question }}
-</div>
-
-<form method="post">
+<div class="question" id="question"></div>
 
 <input
 type="text"
-name="answer"
+id="answer"
 placeholder="解答">
 
 <br><br>
 
-<button type="submit">
+<button onclick="judgeAnswer()">
 判定
 </button>
 
-</form>
-
-<div class="correct">
-{{ result }}
-</div>
-
-{% if completed %}
-<div class="correct">
-以上で問題は終了です．お疲れ様でした．
-</div>
-{% endif %}
+<div id="result"></div>
 
 <br>
 
-{% if qid > 0 %}
-<a href="{{ url_for('question', qid=qid-1) }}">
-<button>前の問題に戻る</button>
-</a>
-{% endif %}
+<button id="prevBtn" onclick="prevQuestion()">
+前の問題
+</button>
 
-{% if qid < total-1 %}
-{% if can_go_next %}
-<a href="{{ url_for('question', qid=qid+1) }}">
-<button>次の問題へ</button>
-</a>
-{% endif %}
-{% endif %}
+<button id="nextBtn" onclick="nextQuestion()">
+次の問題
+</button>
 
 </div>
 
-{% if vibrate %}
 <script>
-if ("vibrate" in navigator) {
-    navigator.vibrate(2000);
+
+const questions = [
+
+{
+title:"第１問",
+question:"➀➁➂➃",
+answer:"GAME"
+},
+
+{
+title:"第２問",
+question:"事件の真相はいつも裏にある",
+answer:"ゆうき"
+},
+
+{
+title:"第３問",
+question:"漢字で解答してください",
+answer:"象"
+},
+
+{
+title:"第４問",
+question:"口を揃えて解答してください",
+answer:"4000"
+},
+
+{
+title:"第５問",
+question:"探してください",
+answer:"4000"
 }
+
+];
+
+let currentQuestion =
+Number(localStorage.getItem("currentQuestion") || 0);
+
+function displayQuestion(){
+
+document.title =
+questions[currentQuestion].title;
+
+document.getElementById("title").textContent =
+questions[currentQuestion].title;
+
+document.getElementById("question").textContent =
+questions[currentQuestion].question;
+
+document.getElementById("answer").value="";
+
+document.getElementById("result").textContent="";
+
+document.getElementById("prevBtn").style.display =
+currentQuestion === 0 ? "none" : "inline-block";
+
+document.getElementById("nextBtn").style.display =
+currentQuestion === questions.length-1 ?
+"none" : "inline-block";
+
+}
+
+function judgeAnswer(){
+
+const userAnswer =
+document.getElementById("answer")
+.value.trim();
+
+const correctAnswer =
+questions[currentQuestion].answer;
+
+const result =
+document.getElementById("result");
+
+if(
+userAnswer.toUpperCase()
+===
+correctAnswer.toUpperCase()
+){
+
+result.className="correct";
+result.textContent="✅ 正解";
+
+if(currentQuestion === questions.length-1){
+
+result.innerHTML =
+"✅ 正解<br><br>以上で問題は終了です。お疲れ様でした。";
+
+if(navigator.vibrate){
+navigator.vibrate(2000);
+}
+
+}
+
+}else{
+
+result.className="wrong";
+result.textContent="❌ 不正解";
+
+}
+
+}
+
+function nextQuestion(){
+
+if(currentQuestion < questions.length-1){
+
+currentQuestion++;
+
+localStorage.setItem(
+"currentQuestion",
+currentQuestion
+);
+
+displayQuestion();
+
+}
+
+}
+
+function prevQuestion(){
+
+if(currentQuestion > 0){
+
+currentQuestion--;
+
+localStorage.setItem(
+"currentQuestion",
+currentQuestion
+);
+
+displayQuestion();
+
+}
+
+}
+
+window.onload = function(){
+
+document.getElementById("startSound")
+.play()
+.catch(()=>{});
+
+displayQuestion();
+
+};
+
 </script>
-{% endif %}
 
 </body>
 </html>

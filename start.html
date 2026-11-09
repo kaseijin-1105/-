@@ -55,32 +55,15 @@ if(localStorage.getItem("authenticated") !== "true"){
 
 window.onload = function(){
 
-    if(navigator.vibrate){
-        navigator.vibrate([200,100,200]);
-    }
-
-    const authSound =
-        document.getElementById("authSound");
-
-    authSound.play().catch(()=>{});
+    console.log("start.html 読み込み成功");
 
     setTimeout(function(){
 
-        document
-        .getElementById("aiVoice")
-        .play()
-        .catch(()=>{});
+        location.href = "question.html";
 
-    },1000);
+    },3000);
 
-    setTimeout(function(){
-
-        location.href =
-        "question.html";
-
-    },9000);
-
-};
+}
 
 </script>
 

@@ -51,29 +51,30 @@ body{
 
 <script>
 
+if(localStorage.getItem("authenticated") !== "true"){
+    location.href = "index.html";
+}
+
 window.onload = async function(){
 
-    // 振動
     if(navigator.vibrate){
         navigator.vibrate([200,100,200]);
     }
 
-    // ピッ
-    await document.getElementById("authSound").play();
+    try{
+        await document.getElementById("authSound").play();
+    }catch(e){}
 
-    // 認証成功表示
     setTimeout(()=>{
         document.getElementById("message").style.opacity="1";
     },300);
 
-    // AI音声
     setTimeout(()=>{
-        document.getElementById("aiVoice").play();
+        document.getElementById("aiVoice").play().catch(()=>{});
     },1500);
 
-    // 問題1へ
     setTimeout(()=>{
-        window.location.href="/question/0";
+        location.href = "question.html";
     },9000);
 
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,49 +25,45 @@ body{
     width:100%;
     max-width:760px;
     margin:auto;
-    padding:clamp(20px,5vw,36px) 16px;
+    padding:20px;
 }
 
 .question{
     white-space:pre-line;
-    font-size:clamp(20px,5vw,24px);
-    margin:clamp(20px,6vw,36px) 0;
-    overflow-wrap:anywhere;
+    font-size:24px;
+    margin:30px 0;
 }
 
 input{
     padding:10px;
     width:100%;
-    max-width:360px;
-    min-height:48px;
-    font-size:16px;
+    max-width:400px;
+    font-size:18px;
 }
 
 button{
     padding:10px 20px;
     margin:5px;
-    min-height:48px;
-    font-size:16px;
+    font-size:18px;
 }
 
 .correct{
     color:#00ff88;
-    font-size:clamp(20px,5vw,24px);
+    font-size:24px;
+    margin-top:20px;
 }
 
 .wrong{
     color:red;
-    font-size:clamp(20px,5vw,24px);
+    font-size:24px;
+    margin-top:20px;
 }
 
 </style>
+
 </head>
 
 <body>
-
-<audio id="startSound">
-    <source src="start.mp3" type="audio/mpeg">
-</audio>
 
 <div class="container">
 
@@ -101,8 +98,13 @@ placeholder="解答">
 
 <script>
 
-<script>
+// 認証確認
+if(localStorage.getItem("authenticated") !== "true"){
+    location.href = "index.html";
+}
 
+
+// 問題データ
 const questions = [
 
 {
@@ -137,14 +139,8 @@ answer:"4000"
 
 ];
 
-// 認証チェック
-if(localStorage.getItem("authenticated") !== "true"){
 
-    location.href = "index.html";
-
-}
-
-// 現在の問題
+// 現在位置
 let currentQuestion =
 Number(localStorage.getItem("currentQuestion") || 0);
 
@@ -153,10 +149,8 @@ let unlockedQuestion =
 Number(localStorage.getItem("unlockedQuestion") || 0);
 
 
+// 表示更新
 function displayQuestion(){
-
-document.title =
-questions[currentQuestion].title;
 
 document.getElementById("title").textContent =
 questions[currentQuestion].title;
@@ -168,14 +162,10 @@ document.getElementById("answer").value = "";
 
 document.getElementById("result").innerHTML = "";
 
-// 前へボタン
-
 document.getElementById("prevBtn").style.display =
 currentQuestion === 0
 ? "none"
 : "inline-block";
-
-// 次へボタン
 
 document.getElementById("nextBtn").style.display =
 currentQuestion < unlockedQuestion
@@ -190,6 +180,7 @@ currentQuestion
 }
 
 
+// 判定
 function judgeAnswer(){
 
 const userAnswer =
@@ -204,20 +195,22 @@ questions[currentQuestion]
 const result =
 document.getElementById("result");
 
+
 if(
 userAnswer.toUpperCase()
 ===
 correctAnswer.toUpperCase()
 ){
 
-result.className="correct";
+result.className = "correct";
+result.innerHTML = "✅ 正解";
 
-result.innerHTML="✅ 正解";
 
-// 解放処理
-
-if(currentQuestion === unlockedQuestion
-&& currentQuestion < questions.length - 1){
+// 次の問題を解放
+if(
+currentQuestion === unlockedQuestion &&
+currentQuestion < questions.length - 1
+){
 
 unlockedQuestion++;
 
@@ -232,22 +225,14 @@ document.getElementById("nextBtn")
 
 }
 
-// 最終問題
 
+// 最終問題
 if(
-currentQuestion
-===
-questions.length - 1
+currentQuestion === questions.length - 1
 ){
 
 result.innerHTML =
-`
-✅ 正解
-<br><br>
-以上で問題は終了です。
-<br>
-お疲れ様でした。
-`;
+"✅ 正解<br><br>以上で問題は終了です。<br>お疲れ様でした。";
 
 if(navigator.vibrate){
 
@@ -259,17 +244,18 @@ navigator.vibrate(
 
 }
 
-}else{
+}
+else{
 
-result.className="wrong";
-
-result.innerHTML="❌ 不正解";
+result.className = "wrong";
+result.innerHTML = "❌ 不正解";
 
 }
 
 }
 
 
+// 次へ
 function nextQuestion(){
 
 if(
@@ -279,7 +265,7 @@ unlockedQuestion
 ){
 
 alert(
-"先に現在の問題を解いてください"
+"先にこの問題を正解してください"
 );
 
 return;
@@ -293,7 +279,6 @@ questions.length - 1
 ){
 
 currentQuestion++;
-
 displayQuestion();
 
 }
@@ -301,12 +286,12 @@ displayQuestion();
 }
 
 
+// 前へ
 function prevQuestion(){
 
 if(currentQuestion > 0){
 
 currentQuestion--;
-
 displayQuestion();
 
 }
@@ -314,13 +299,24 @@ displayQuestion();
 }
 
 
-window.onload = function(){
+// Enterキー対応
+document.addEventListener("DOMContentLoaded",function(){
 
 displayQuestion();
 
-};
+document
+.getElementById("answer")
+.addEventListener("keypress",function(e){
 
-</script>
+if(e.key === "Enter"){
+
+judgeAnswer();
+
+}
+
+});
+
+});
 
 </script>
 

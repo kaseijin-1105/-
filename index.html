@@ -78,6 +78,8 @@ placeholder="パスワードを入力">
 
 <script>
 
+<script>
+
 function checkPassword(){
 
     const password =
@@ -85,18 +87,18 @@ function checkPassword(){
 
     if(password === "4401"){
 
-        document.getElementById("error").textContent = "";
+        localStorage.setItem("authenticated","true");
 
         const sound =
             document.getElementById("startSound");
 
-        sound.play();
+        sound.play().catch(()=>{});
 
         setTimeout(function(){
 
-            window.location.href = "start.html";
+            location.href = "./start.html";
 
-        },1000);
+        },500);
 
     }
     else{
@@ -107,6 +109,7 @@ function checkPassword(){
     }
 }
 
+</script>
 document.getElementById("password")
 .addEventListener("keypress", function(event){
 

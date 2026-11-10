@@ -229,25 +229,21 @@ correctAnswer.toUpperCase()
 
     }
 
-    if(
-    currentQuestion >= 3 &&
-    currentQuestion === unlockedQuestion &&
-    currentQuestion < questions.length - 1
-    ){
+// 第4問正解時のみ第5問を解放
+if(currentQuestion === 3){
 
-        unlockedQuestion++;
+    unlockedQuestion = 4;
 
-        localStorage.setItem(
-            "unlockedQuestion",
-            unlockedQuestion
-        );
+    localStorage.setItem(
+        "unlockedQuestion",
+        unlockedQuestion
+    );
 
-        document.getElementById("nextBtn")
-        .style.display =
-        "inline-block";
+    document.getElementById("nextBtn")
+    .style.display =
+    "inline-block";
 
-    }
-
+}
     // 最終問題
     if(
     currentQuestion === questions.length - 1

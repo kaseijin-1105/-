@@ -178,14 +178,26 @@ if(currentQuestion <= 2){
 // 第4問以降は解放済みのみ
 else{
 
-    document.getElementById("nextBtn")
-    .style.display =
-    currentQuestion < unlockedQuestion
-    ? "inline-block"
-    : "none";
+    if(
+        currentQuestion === 3 &&
+        unlockedQuestion === 4
+    ){
+
+        document.getElementById("nextBtn")
+        .style.display = "inline-block";
+
+    }
+    else{
+
+        document.getElementById("nextBtn")
+        .style.display =
+        currentQuestion < unlockedQuestion
+        ? "inline-block"
+        : "none";
+
+    }
 
 }
-
 localStorage.setItem(
 "currentQuestion",
 currentQuestion

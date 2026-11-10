@@ -216,56 +216,55 @@ userAnswer.toUpperCase()
 correctAnswer.toUpperCase()
 ){
 
-// 第4問だけ特殊処理
-if(currentQuestion === 3){
+    // 第4問だけ正解表示しない
+    if(currentQuestion === 3){
 
-    result.innerHTML = "";
+        result.innerHTML = "";
 
-}
-else{
+    }
+    else{
 
-    result.className = "correct";
-    result.innerHTML = "✅ 正解";
+        result.className = "correct";
+        result.innerHTML = "✅ 正解";
 
-}
+    }
 
+    if(
+    currentQuestion >= 3 &&
+    currentQuestion === unlockedQuestion &&
+    currentQuestion < questions.length - 1
+    ){
 
-if(
-currentQuestion >= 3 &&
-currentQuestion === unlockedQuestion &&
-currentQuestion < questions.length - 1
-){
+        unlockedQuestion++;
 
-    unlockedQuestion++;
+        localStorage.setItem(
+            "unlockedQuestion",
+            unlockedQuestion
+        );
 
-    localStorage.setItem(
-        "unlockedQuestion",
-        unlockedQuestion
-    );
+        document.getElementById("nextBtn")
+        .style.display =
+        "inline-block";
 
-    document.getElementById("nextBtn")
-    .style.display =
-    "inline-block";
-}
+    }
 
+    // 最終問題
+    if(
+    currentQuestion === questions.length - 1
+    ){
 
-// 最終問題
-if(
-currentQuestion === questions.length - 1
-){
+        result.innerHTML =
+        "✅ 正解<br><br>以上で問題は終了です。<br>お疲れ様でした。";
 
-result.innerHTML =
-"✅ 正解<br><br>以上で問題は終了です。<br>お疲れ様でした。";
+        if(navigator.vibrate){
 
-if(navigator.vibrate){
+            navigator.vibrate(
+            [300,100,300,100,300]
+            );
 
-navigator.vibrate(
-[300,100,300,100,300]
-);
+        }
 
-}
-
-}
+    }
 
 }
 else{

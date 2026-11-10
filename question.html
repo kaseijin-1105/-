@@ -220,23 +220,22 @@ result.className = "correct";
 result.innerHTML = "✅ 正解";
 
 
-// 次の問題を解放
 if(
+currentQuestion >= 3 &&
 currentQuestion === unlockedQuestion &&
 currentQuestion < questions.length - 1
 ){
 
-unlockedQuestion++;
+    unlockedQuestion++;
 
-localStorage.setItem(
-"unlockedQuestion",
-unlockedQuestion
-);
+    localStorage.setItem(
+        "unlockedQuestion",
+        unlockedQuestion
+    );
 
-document.getElementById("nextBtn")
-.style.display =
-"inline-block";
-
+    document.getElementById("nextBtn")
+    .style.display =
+    "inline-block";
 }
 
 
@@ -335,25 +334,12 @@ document.addEventListener("DOMContentLoaded",function(){
 
 displayQuestion();
 
-document
-.getElementById("answer")
+document.getElementById("answer")
 .addEventListener("keypress",function(e){
 
 if(e.key === "Enter"){
 
 judgeAnswer();
-if(
-currentQuestion >= 3 &&
-currentQuestion === unlockedQuestion &&
-currentQuestion < questions.length - 1
-){
-
-    unlockedQuestion++;
-
-    localStorage.setItem(
-        "unlockedQuestion",
-        unlockedQuestion
-    );
 
 }
     

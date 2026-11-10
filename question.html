@@ -167,10 +167,24 @@ currentQuestion === 0
 ? "none"
 : "inline-block";
 
-document.getElementById("nextBtn").style.display =
-currentQuestion < unlockedQuestion
-? "inline-block"
-: "none";
+// 第1～3問は常に次へ表示
+if(currentQuestion <= 2){
+
+    document.getElementById("nextBtn")
+    .style.display = "inline-block";
+
+}
+
+// 第4問以降は解放済みのみ
+else{
+
+    document.getElementById("nextBtn")
+    .style.display =
+    currentQuestion < unlockedQuestion
+    ? "inline-block"
+    : "none";
+
+}
 
 localStorage.setItem(
 "currentQuestion",
@@ -258,6 +272,22 @@ result.innerHTML = "❌ 不正解";
 // 次へ
 function nextQuestion(){
 
+// 第1～3問は自由移動
+if(currentQuestion <= 2){
+
+    if(currentQuestion < questions.length - 1){
+
+        currentQuestion++;
+
+        displayQuestion();
+
+    }
+
+    return;
+
+}
+
+// 第4問以降
 if(
 currentQuestion + 1
 >
@@ -279,6 +309,7 @@ questions.length - 1
 ){
 
 currentQuestion++;
+
 displayQuestion();
 
 }
@@ -311,7 +342,21 @@ document
 if(e.key === "Enter"){
 
 judgeAnswer();
+if(
+currentQuestion >= 3 &&
+currentQuestion === unlockedQuestion &&
+currentQuestion < questions.length - 1
+){
 
+    unlockedQuestion++;
+
+    localStorage.setItem(
+        "unlockedQuestion",
+        unlockedQuestion
+    );
+
+}
+    
 }
 
 });

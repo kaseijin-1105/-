@@ -216,8 +216,18 @@ userAnswer.toUpperCase()
 correctAnswer.toUpperCase()
 ){
 
-result.className = "correct";
-result.innerHTML = "✅ 正解";
+// 第4問だけ特殊処理
+if(currentQuestion === 3){
+
+    result.innerHTML = "";
+
+}
+else{
+
+    result.className = "correct";
+    result.innerHTML = "✅ 正解";
+
+}
 
 
 if(
